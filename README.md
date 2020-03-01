@@ -1,5 +1,12 @@
 # PIMS 2 Design Document and Prototype
 
+## Summary
+
+PIMS is a library for reading image series in a lazy fashion from various image
+and video formats via a consistent API. It could be reworked to leverage
+libraries, language features, and changes to the packaging ecosystem that have
+emerged since PIMS' first release in 2013.
+
 ## PIMS
 
 **What is PIMS?** [PIMS](http://soft-matter.github.io/pims), short for Python
@@ -63,20 +70,24 @@ slowed around 2015, but the project is still tended to.
   through composition. The authors now appreciate the downsides of subclassing
   `ndarray` and the difficulties of propagating metadata through array
   operations.
-* `pims.open` detects and dispatches based on file format using an *ad hoc*
-  mechanism rather than using the MIME type standard and leveraging the standard
-  library module
-  [mimetypes](https://docs.python.org/3/library/mimetypes.html).
+* `pims.open` detects file format and dispatches to a compatible reader using an
+  *ad hoc* scheme rather than using an existing standard.
 
 ## Proposal for PIMS 2.0
 
-* **Use MIME** Dispatch file formats based on MIME types. MIME types are not as
-  well known to the scientific user--programmers that PIMS aims to serve as they
-  are to web-oriented software engineers, but they do already have foothold in
-  SciPy via IPython rich display's
+* **Use MIME** Detect file format and dispatch to a compatible reader based
+  on the file's MIME type, using the Python standard library module
+  [mimetypes](https://docs.python.org/3/library/mimetypes.html) and potentially
+  other third-party libraries in this space. Although
+  MIME types are not so well known to the scientific user--programmers that PIMS
+  aims to serve as they are to web-oriented software engineers, they do
+  already have foothold in SciPy via IPython rich display's
   [`_repr_mimebundle_`](https://ipython.readthedocs.io/en/stable/config/integrating.html#MyObject._repr_mimebundle_)
   and the
   [Jupyter data explorer](https://github.com/jupyterlab/jupyterlab-data-explorer).
+  (Some formats of interest, such as one-off vendor-specific microscopy formats,
+  are not registered with the IANA MIME type standard, but that standard
+  includes a well-defined system for handling unregistered types.)
 * **Use Entrypoints** Perform reader discovery using entrypoints. Packages can
   declare in their `setup.py` that they provide PIMS-compatible objects like so:
 

@@ -56,7 +56,7 @@ slowed around 2015, but the project is still tended to.
   import `pims` to subclass its objects and (2) the user must import the
   external package before using `pims.open` for PIMS to discover it.
 * PIMS readers return `Frame` objects which subclass `numpy.ndarray` in order to
-  tack a custom `metadata` alongside the data, rather than taking the xarray
+  tack a custom `metadata` on the array, rather than taking the xarray
   approach and putting `metadata` on an object that encapsulates the data
   through composition. The authors now appreciate the downsides of subclassing
   `ndarray` and the difficulties of propagating metadata through array

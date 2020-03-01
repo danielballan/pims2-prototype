@@ -49,7 +49,7 @@ slowed around 2015, but the project is still tended to.
   reader (or groups of readers with the same underlying I/O library) in separate
   packages so that they can be separately released and installed.
 * PIMS predated the acceptance of `entrypoints` as an official Python language
-  feature (as opposed to a quirk/feature of only setuptools specifically). It
+  feature (as opposed to a quirk/feature of only setuptools specifically). PIMS
   supports readers in external packages, but it discovers them by searching for
   subclasses of its base classes `FramesSequences` and `FramesSequenceND`. The
   downside of this approach is that (1) external packages with readers *must*

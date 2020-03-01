@@ -79,8 +79,8 @@ slowed around 2015, but the project is still tended to.
   on the file's MIME type, using the Python standard library module
   [mimetypes](https://docs.python.org/3/library/mimetypes.html) and potentially
   other third-party libraries in this space. Although
-  MIME types are not so well known to the scientific user--programmers that PIMS
-  aims to serve as they are to web-oriented software engineers, they do
+  MIME types are not as well known to the scientific user--programmers that PIMS
+  aims to serve as they are to web-oriented software engineers, MIME types do
   already have foothold in SciPy via IPython rich display's
   [`_repr_mimebundle_`](https://ipython.readthedocs.io/en/stable/config/integrating.html#MyObject._repr_mimebundle_)
   and the
@@ -167,7 +167,7 @@ itself to engage the automatic MIME type inspection and dispatch in
   * Readers could make their own choice about the best default value for
     `delayed`, depending on data shape and how well the underlying I/O library
     actually supports laziness.
-* It is often convenience to label axes of the data (color band, x vs y, etc.)
+* It is often convenient to label axes of the data (color band, x vs y, etc.)
   Should PIMS 2 standardize on `xarray.DataArray`-wrapping-`dask.array.Array`
   instead of standardizing on `dask.array.Array`? Or should either be allowed,
   since they duck-type alike in many ways?

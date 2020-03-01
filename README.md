@@ -171,3 +171,9 @@ itself to engage the automatic MIME type inspection and dispatch in
   Should PIMS 2 standardize on `xarray.DataArray`-wrapping-`dask.array.Array`
   instead of standardizing on `dask.array.Array`? Or should either be allowed,
   since they duck-type alike in many ways?
+
+## Migrating Existing Users
+
+The proposed change to `pims.open` would be backward-incompatible, but all other
+objects in PIMS could remain in the PIMS codebase in their current form,
+deprecated but usable, alongside new objects that implement the PIMS 2 API.

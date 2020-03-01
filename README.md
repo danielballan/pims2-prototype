@@ -17,9 +17,10 @@ images = pims.open('my_directory/*.tif')  # many TIFs with sequential names
 images = pims.open('tiff_stack.tif')  # one TIF file containing many frames
 images = pims.open('movie.mp4')
 
-# All of these are supported and lazy --- no I/O performed yet.
+# All of these indexing styles are supported and lazy --- no I/O performed yet.
 subset = images[::2]
-subset = images[]
+subset = images[:5]
+subset = images[[13, 52, 99]] 
 
 # When a single frame is accessed, via indexing...
 first_image = subset[0]
@@ -32,7 +33,8 @@ for image in subset:
 ```
 
 **Who uses PIMS?** According to GitHub it is used by 102 other projects, and it
-has 51 works. Dask-image uses pims, as a required dependency.
+has 51 forks. Dask-image uses pims, as a required dependency. Many users
+are concentrated in the bio sciences or soft matter physics area.
 
 **Who maintains PIMS?** PIMS was split out of an image analysis codebase in
 2013. Its main contributors are Dan Allan (BNL), Thomas Caswell (BNL), Nathan

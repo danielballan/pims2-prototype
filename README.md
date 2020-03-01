@@ -140,3 +140,21 @@ adds value. If there exist PIMS-compatible objects for all the formats involved,
 my code will have to change very little. I may even decide to install pims
 itself to engage the automatic MIME type inspection and dispatch in
 ``pims.open``.
+
+## More Embellishments to Consider
+
+* To obtain a `numpy.ndarray` instead of a `dask.array.Array`, users can do
+  `pims.open(file).read().compute()`. Should readers support an optional
+  argument to `read` that returns a `numpy.ndarray` directly, as in
+  `pims.open(file).read(delayed=False)`? Implications:
+  * This reduces the type stability of the API from strict type stability to
+    duck type stability.
+  * Some readers could forgo the dask dependency and raise `NotImplementedError`
+    if `delayed=True`.
+  * Readers could make their own choice about the best default value for
+    `delayed`, depending on data shape and how well the underlying I/O library
+    actually supports laziness.
+* It is often convenience to label axes of the data (color band, x vs y, etc.)
+  Should PIMS 2 standardize on `xarray.DataArray`-wrapping-`dask.array.Array`
+  instead of standardizing on `dask.array.Array`? Or should either be allowed,
+  since they duck-type alike in many ways?

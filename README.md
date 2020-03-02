@@ -45,8 +45,9 @@ are concentrated in the bio sciences or soft matter physics area.
 
 **Who maintains PIMS?** PIMS was split out of an image analysis codebase in
 2013. Its main contributors are Dan Allan (BNL), Thomas Caswell (BNL), Nathan
-Keim (Penn State), and Casper van der Wel (Nelen & Schuurmans). New development
-slowed around 2015, but the project is still tended to.
+Keim (Penn State), Casper van der Wel (Nelen & Schuurmans), and Ruben Verweij
+(Leiden University). New development slowed around 2015, but the project is
+still tended to.
 
 ## Room for Improvement
 

@@ -91,9 +91,15 @@ slowed around 2015, but the project is still tended to.
   [`_repr_mimebundle_`](https://ipython.readthedocs.io/en/stable/config/integrating.html#MyObject._repr_mimebundle_)
   and the
   [Jupyter data explorer](https://github.com/jupyterlab/jupyterlab-data-explorer).
-  (Some formats of interest, such as one-off vendor-specific microscopy formats,
-  are not registered with the IANA MIME type standard, but that standard
-  includes a well-defined system for handling unregistered types.)
+  IANA maintains an official registry of formats (e.g. ``'image/png'``) but it
+  also defines a standard for adding application-specific formats outside of the
+  official standard (e.g. ``'application/x-hdf'``). PIMS can use official MIME
+  types where possible and use this extension mechanism for formats that are not
+  registered, such as one-off vendor-specific microscopy formats. *Within* a
+  given MIME type (e.g. ``'image/tiff'``) there can also be significant variety.
+  For this, a nested dispatch may be the right idea: PIMS dispatches based on
+  MIME type, and the reader registered for that MIME type may inspect the file
+  and do a second layer of dispatch based on its contents/layout.
 * **Use Entrypoints** Perform reader discovery using entrypoints. Packages can
   declare in their `setup.py` that they provide PIMS-compatible objects like so:
 

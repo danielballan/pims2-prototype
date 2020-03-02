@@ -285,11 +285,11 @@ Things to notice:
 
 ## Connection to Intake DataSources
 
-The project [intake](https://intake.readthedocs.io/) is a newer project that
-wraps disparate file formats in a consistent interface. Intake handles many data
-structures, not just image time series; in particular it has many readers that
-return tabular data as a `pandas.DataFrame` or `xarray.Dataset`. How should PIMS
-relate to intake?
+[Intake](https://intake.readthedocs.io/) is a newer project that, like PIMS,
+wraps disparate file formats in a consistent interface. Unlike PIMS, intake
+handles many data structures, not just image time series; in particular it has
+many readers that return tabular data as a `pandas.DataFrame` or
+`xarray.Dataset`. How should PIMS relate to intake?
 
 There is something to be said for intake's all-encompassing generality. "You
 give me a data source; I give you a PyData object or its lazy (dask-backed)

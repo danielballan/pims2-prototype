@@ -126,8 +126,9 @@ slowed around 2015, but the project is still tended to.
 
   *The usage `pims.open(file).read()` is still satisfyingly succinct and rhymes
   nicely with the opening files in Python `open(file).read()`. Reading a file
-  with PIMS will feel like reading a file with Python, but instead of bytes one
-  gets lazy array-like objects.*
+  with PIMS will feel like reading a file with Python, but instead of returning
+  an iterable of lines, it returns a lazy array-like object, which can be
+  treated as an iterable sequence of images.*
 
 * **Use Dask** Embrace dask arrays, leaving behind PIMS' lazy array-like
   classes `FramesSequence` and `FramesSequenceND`.

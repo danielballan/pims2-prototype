@@ -269,4 +269,4 @@ Things to notice:
    installed. If `tifffile` itself were to add a PIMS reader, it could do so
    without adding a `pims` dependency.
 *  The core `pims` package provides the dispatch mechanism. It has one
-   dependency (the tiny pure-Python package `entrypoints`) and very little code.
+   dependency (the tiny pure-Python package `entrypoints`) and 50 lines of code.

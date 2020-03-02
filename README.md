@@ -102,14 +102,15 @@ slowed around 2015, but the project is still tended to.
 
   In this way, packages can declare that they include objects with a
   PIMS-compatible interface without actually *importing* PIMS or subclassing any
-  PIMS objects. Perhaps they *may* subclass something from PIMS for
-  convenience, but they don't have to.)
+  PIMS objects. (PIMS may *provide* base classes as optional scaffolds for
+  convenience or code reuse, but the key point is that packages are not required
+  to use them.)
  
   Providing the option *not* to depending on PIMS is a selling point for
   packages that may add PIMS support experimentally or only incidentally.
-  Established I/O packages maybe open to adding PIMS-compatible readers to
-  their API if it costs them no new dependencies, only tens of lines of code,
-  and no new dependencies, not even optional ones.
+  Established I/O packages maybe open to adding PIMS-compatible readers to their
+  API if it costs them no new dependencies, only tens of lines of code, and no
+  new dependencies, not even optional ones.
 
   Also, PIMS can use [entrypoints](https://entrypoints.readthedocs.io/) to
   construct a registry of all installed readers without actually *importing* the

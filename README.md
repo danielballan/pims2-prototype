@@ -84,22 +84,29 @@ slowed around 2015, but the project is still tended to.
 * **Use MIME** Detect file format and dispatch to a compatible reader based
   on the file's MIME type, using the Python standard library module
   [mimetypes](https://docs.python.org/3/library/mimetypes.html) and potentially
-  other third-party libraries in this space. Although
-  MIME types are not as well known to the scientific user--programmers that PIMS
-  aims to serve as they are to web-oriented software engineers, MIME types do
-  already have foothold in SciPy via IPython rich display's
-  [`_repr_mimebundle_`](https://ipython.readthedocs.io/en/stable/config/integrating.html#MyObject._repr_mimebundle_)
-  and the
-  [Jupyter data explorer](https://github.com/jupyterlab/jupyterlab-data-explorer).
+  other third-party libraries in this space.
+
   IANA maintains an official registry of formats (e.g. ``'image/png'``) but it
   also defines a standard for adding application-specific formats outside of the
   official standard (e.g. ``'application/x-hdf'``). PIMS can use official MIME
   types where possible and use this extension mechanism for formats that are not
-  registered, such as one-off vendor-specific microscopy formats. *Within* a
-  given MIME type (e.g. ``'image/tiff'``) there can also be significant variety.
-  For this, a nested dispatch may be the right idea: PIMS dispatches based on
-  MIME type, and the reader registered for that MIME type may inspect the file
-  and do a second layer of dispatch based on its contents/layout.
+  registered, such as one-off vendor-specific microscopy formats.
+
+  Within a given MIME type there can be significant variety of internal
+  structure or metadata conventions. For this, a nested dispatch may be the
+  right idea: PIMS dispatches based on MIME type, and the reader registered for
+  that MIME type may inspect the file and do a second layer of dispatch based on
+  its contents/layout. Nothing in PIMS currently requires this level of
+  complexity, but it might be useful if we were to add a family of, say,
+  [NeXuS](https://manual.nexusformat.org/) readers or more sophisticated TIFF
+  readers.
+
+  Although MIME types are not as well known to the scientific user--programmers
+  that PIMS aims to serve as they are to web-oriented software engineers, MIME
+  types do already have foothold in SciPy via IPython rich display's
+  [`_repr_mimebundle_`](https://ipython.readthedocs.io/en/stable/config/integrating.html#MyObject._repr_mimebundle_)
+  and the [Jupyter data
+  explorer](https://github.com/jupyterlab/jupyterlab-data-explorer).
 * **Use Entrypoints** Perform reader discovery using entrypoints. Packages can
   declare in their `setup.py` that they provide PIMS-compatible objects like so:
 

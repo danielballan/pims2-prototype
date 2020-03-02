@@ -57,13 +57,15 @@ slowed around 2015, but the project is still tended to.
   dependencies to support these readers. It might be better to distribute each
   reader (or groups of readers with the same underlying I/O library) in separate
   packages so that they can be separately released and installed.
-* PIMS predated the acceptance of `entrypoints` as an official Python language
-  feature (as opposed to a quirk/feature of only setuptools specifically). PIMS
-  supports readers in external packages, but it discovers them by searching for
-  subclasses of its base classes `FramesSequences` and `FramesSequenceND`. The
-  downside of this approach is that (1) external packages with readers *must*
-  import `pims` to subclass its objects and (2) the user must import the
-  external package before using `pims.open` for PIMS to discover it.
+* PIMS predated the acceptance of
+  [entrypoints](https://packaging.python.org/specifications/entry-points/)
+  as an official PyPA specification (as opposed to a quirk/feature of only
+  setuptools specifically). PIMS supports readers defined in external packages,
+  but it discovers them by searching for subclasses of its base classes
+  `FramesSequences` and `FramesSequenceND`. The downsides of this approach are
+  (1) external packages with readers *must* import `pims` to subclass its
+  objects and (2) the user must import the external package before using
+  `pims.open` for PIMS to discover it.
 * PIMS readers return `Frame` objects which subclass `numpy.ndarray` in order to
   tack a custom `metadata` on the array, rather than taking the xarray
   approach and putting `metadata` on an object that encapsulates the data

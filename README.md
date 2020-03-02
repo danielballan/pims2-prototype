@@ -100,9 +100,14 @@ slowed around 2015, but the project is still tended to.
 
   In this way, packages can declare that they include objects with a
   PIMS-compatible interface without actually *importing* PIMS or subclassing any
-  PIMS objects. (Perhaps they *may* subclass something from PIMS for
-  convenience, but providing the option not to do so is a selling point for
-  packages that may add PIMS support experimentally or only incidentally.)
+  PIMS objects. Perhaps they *may* subclass something from PIMS for
+  convenience, but they don't have to.)
+ 
+  Providing the option *not* to depending on PIMS is a selling point for
+  packages that may add PIMS support experimentally or only incidentally.
+  Established I/O packages maybe open to adding PIMS-compatible readers to
+  their API if it costs them no new dependencies, only tens of lines of code,
+  and no new dependencies, not even optional ones.
 
   Also, PIMS can use [entrypoints](https://entrypoints.readthedocs.io/) to
   construct a registry of all installed readers without actually *importing* the
@@ -133,7 +138,7 @@ slowed around 2015, but the project is still tended to.
 * **Use Dask** Embrace dask arrays, leaving behind PIMS' lazy array-like
   classes `FramesSequence` and `FramesSequenceND`.
 
-## PIMS as a Pattern
+### PIMS as a Pattern
 
 In the proposed design for 2.0, the "core" PIMS library becomes quite small
 indeed, and some applications unnecessary to even install.
@@ -155,7 +160,7 @@ my code will have to change very little. I may even decide to install pims
 itself to engage the automatic MIME type inspection and dispatch in
 ``pims.open``.
 
-## More Embellishments to Consider
+### More Embellishments to Consider
 
 * To obtain a `numpy.ndarray` instead of a `dask.array.Array`, users can do
   `pims.open(file).read().compute()`. Should readers support an optional
@@ -173,8 +178,91 @@ itself to engage the automatic MIME type inspection and dispatch in
   instead of standardizing on `dask.array.Array`? Or should either be allowed,
   since they duck-type alike in many ways?
 
-## Migrating Existing Users
+### Migrating Existing Users
 
 The proposed change to `pims.open` would be backward-incompatible, but all other
 objects in PIMS could remain in the PIMS codebase in their current form,
 deprecated but usable, alongside new objects that implement the PIMS 2 API.
+
+## Try the Prototype
+
+This repo contains several packages, which should be maintained in separate
+repositories. They are prototyped in subdirectories of this repository only for
+the sake of a self-contained example.
+
+1. Install the requirements. Note that PIMS 2 itself has only one requirement,
+   the small pure-Python library `entrypoints`. These are the requirements for
+   generating example data.
+
+   ```sh
+   pip install -r requirements_for_generate_example_data.txt
+   ```
+
+2. Generate example data.
+
+   ```sh
+   python generate_example_data.py
+   ```
+
+3. Install the TIFF reader.
+
+   ```sh
+   pip install pims-tiff
+   ```
+
+4. Try using reader directly to read one TIFF.
+
+   ```py
+   In [1]: import my_tiff_package
+
+   In [2]: reader = my_tiff_package.TIFFReader('example_data/coffee.tif')
+
+   In [3]: reader
+   Out[3]: TiffReader('example_data/coffee.tif')
+
+   In [4]: reader.read()
+   Out[4]: dask.array<from-value, shape=(400, 600, 3), dtype=uint8, chunksize=(400, 600, 3), chunktype=numpy.ndarray>
+
+   In [5]: reader.read().compute()
+   <numpy array output, snipped>
+   ```
+
+   And try a TIFF series and stack as well.
+
+   ```py
+   In [3]: my_tiff_package.TIFFReader('example_data/series/*.tif').read().shape
+   Out[3]: (200, 25, 25)
+
+   In [4]: my_tiff_package.TIFFReader('example_data/lfw_subset_as_stack.tif').read().shape
+   Out[4]: (200, 25, 25)
+   ```
+
+5. Install PIMS.
+
+   ```sh
+   pip install pims  # should pull from current directory, not PyPI
+   ```
+
+6. Let `pims.open` detect the filetype and invoke the TIFF reader implicitly.
+
+   ```py
+   In [1]: import pims
+
+   In [2]: pims.open('example_data/coffee.tif').read().shape
+   Out[2]: (400, 600, 3)
+   ```
+
+   Another example spells the file extension differently, but `mimetypes` still
+   detects the filetype successfully.
+
+   ```py
+   In [3]: pims.open('example_data/coffee.tiff').read().shape
+   Out[3]: (400, 600, 3)
+   ```
+
+Things to notice:
+*  We were able to use `my_tiff_package` without `pims` itself imported or even
+   installed. If `tifffile` itself were to add a PIMS reader, it could do so
+   without adding a `pims` dependency.
+*  The core `pims` package provides the dispatch mechanism. It has one
+   dependency (the tiny pure-Python package `entrypoints`) and very little code.

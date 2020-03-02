@@ -256,8 +256,8 @@ the sake of a self-contained example.
    Out[2]: (400, 600, 3)
    ```
 
-   Another example spells the file extension differently, but `mimetypes` still
-   detects the filetype successfully.
+   Another example spells the file extension differently (`tiff` vs `tif`, but
+   `mimetypes` still detects the filetype successfully.
 
    ```py
    In [3]: pims.open('example_data/coffee.tiff').read().shape
@@ -268,5 +268,9 @@ Things to notice:
 *  We were able to use `my_tiff_package` without `pims` itself imported or even
    installed. If `tifffile` itself were to add a PIMS reader, it could do so
    without adding a `pims` dependency.
-*  The core `pims` package provides the dispatch mechanism. It has one
-   dependency (the tiny pure-Python package `entrypoints`) and 50 lines of code.
+*  The core `pims` package provides the dispatch-on-filetype mechanism. It has
+   one dependency (the tiny pure-Python package `entrypoints`) and 50 lines of
+   code. The filetype detection is done via the Python standard library module
+   `mimetypes`, which relies solely on the file extension. More sophisticated
+   detection schemes that consider file signatures are availabe in third party
+   libraries and should be considered.

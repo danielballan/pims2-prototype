@@ -11,7 +11,7 @@ emerged since PIMS' first release in 2013.
 
 **What is PIMS?** [PIMS](http://soft-matter.github.io/pims), short for Python
 Image Sequence, provides a common API to several underlying image or video I/O
-libraries. It exposes images sequences through an object that supports numpy
+libraries. It exposes image sequences through an object that supports numpy
 array-like slicing with lazy evaluation.
 
 Example:

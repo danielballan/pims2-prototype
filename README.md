@@ -211,7 +211,7 @@ the sake of a self-contained example.
 3. Install the TIFF reader.
 
    ```sh
-   pip install my_tiff_package
+   pip install -e my_tiff_package
    ```
 
 4. Try using reader directly to read one TIFF.
@@ -244,7 +244,7 @@ the sake of a self-contained example.
 5. Install PIMS.
 
    ```sh
-   pip install pims  # should pull from current directory, not PyPI
+   pip install -e pims  # must use -e to pull from current directory not PyPI
    ```
 
 6. Let `pims.open` detect the filetype and invoke the TIFF reader implicitly.

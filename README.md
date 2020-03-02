@@ -267,7 +267,7 @@ the sake of a self-contained example.
    ```
 
 Things to notice:
-*  We were able to use `my_tiff_package` without `pims` itself imported or even
+*  We were able to use `my_tiff_package` without `pims` imported or even
    installed. If `tifffile` itself were to add a PIMS reader, it could do so
    without adding a `pims` dependency.
 *  The core `pims` package provides the dispatch-on-filetype mechanism. It has

@@ -106,14 +106,14 @@ slowed around 2015, but the project is still tended to.
   convenience or code reuse, but the key point is that packages are not required
   to use them.)
  
-  Providing the option *not* to depending on PIMS is a selling point for
+  Providing the option *not* to depend on PIMS may help gain adoption among
   packages that may add PIMS support experimentally or only incidentally.
-  Established I/O packages maybe open to adding PIMS-compatible readers to their
-  API if it costs them no new dependencies, only tens of lines of code, and no
-  new dependencies, not even optional ones.
+  Established I/O packages might be open to adding PIMS-compatible readers to
+  their API if it costs them only tens of lines of code and no new dependencies,
+  not even optional ones.
 
   Also, PIMS can use [entrypoints](https://entrypoints.readthedocs.io/) to
-  construct a registry of all installed readers without actually *importing* the
+  construct a registry of all installed readers without actually importing the
   corresponding libraries unless/until their objects are actually used.
 * **Put metadata beside data** Rather than returning a lazy, array-ish object
   directly, as PIMS does now
@@ -123,8 +123,8 @@ slowed around 2015, but the project is still tended to.
   ```
 
   add one more layer of indirection, giving space for `metadata` which can be
-  cheaply accessed and inspected before additional I/O is performed to build the
-  lazy array.
+  cheaply accessed and inspected before additional work is performed to build
+  the lazy array.
 
   ```py
   reader = pims.open(file)
@@ -133,10 +133,10 @@ slowed around 2015, but the project is still tended to.
   ```
 
   The usage `pims.open(file).read()` is still satisfyingly succinct and rhymes
-  nicely with the opening files in Python `open(file).read()`. Reading a file
-  with PIMS will feel like reading a file with Python, but instead of returning
-  an iterable of lines, it returns a lazy array-like object, which can be
-  treated as an iterable sequence of images.
+  nicely with the syntax for opening files in Python, `open(file).read()`.
+  Reading a file with PIMS will feel like reading a file with Python, but
+  instead of returning an iterable of lines, it will return a lazy array-like
+  object, which can be treated as an iterable sequence of images.
 
 * **Use Dask** Embrace dask arrays, leaving behind PIMS' lazy array-like
   classes `FramesSequence` and `FramesSequenceND`. We may also want to provide
@@ -155,8 +155,8 @@ above, I could do both of these things without importing pims or adding it as a
 dependency.
 
 What have I gained for my effort? If all I care about is my particular file
-format, not much. I'll see no benefit to installing pims itself; I can just
-import and use my PIMS-compatible reader class directly from my package.
+format, not much. I might not find the new reader class any more convenient than
+my original I/O code which underlies it.
 
 But when I or one of my collaborators needs to read two different kinds of
 formats, perhaps to align microscopy images with images from another instrument

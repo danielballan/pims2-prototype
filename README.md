@@ -129,36 +129,40 @@ slowed around 2015, but the project is still tended to.
   lazy_array = reader.read()
   ```
 
-  *The usage `pims.open(file).read()` is still satisfyingly succinct and rhymes
+  The usage `pims.open(file).read()` is still satisfyingly succinct and rhymes
   nicely with the opening files in Python `open(file).read()`. Reading a file
   with PIMS will feel like reading a file with Python, but instead of returning
   an iterable of lines, it returns a lazy array-like object, which can be
-  treated as an iterable sequence of images.*
+  treated as an iterable sequence of images.
 
 * **Use Dask** Embrace dask arrays, leaving behind PIMS' lazy array-like
-  classes `FramesSequence` and `FramesSequenceND`.
+  classes `FramesSequence` and `FramesSequenceND`. We may also want to provide
+  the option for readers to return plain numpy arrays as well or instead. See
+  below more more on this point.
 
 ### PIMS as a Pattern
 
 In the proposed design for 2.0, the "core" PIMS library becomes quite small
 indeed, and some applications unnecessary to even install.
 
-Suppose I have a library for reading and analyzing microscopy images. I already
-have I/O code. I could wrap it in a class that implements a PIMS-compatible
-reader---which is just an object with a `metadata` attribute and a `read()`
-method that returns a dask array---and I could make it discoverable by declaring
-a ``'pims.reader'`` entrypoint to my ``setup.py``. As emphasized above, I could
+Suppose I have a library for reading and analyzing microscopy images in
+particular file format. I already have I/O code. I could wrap it in a class that
+implements a PIMS-compatible reader. (As illusrated with `reader` above in the
+example below, a "PIMS compatible reader" is a very small API, so this is likely
+< 100 lines of code.) I could make the reader discoverable by declaring a
+``'pims.readers'`` entrypoint in my ``setup.py``. As emphasized above, I could
 do both of these things without importing pims.
 
-What have I gained? If all I care about is my microscopy images, not much. There
-is no benefit to installing pims itself; I can just import and use my
-PIMS-compatible reader class directly from my package. But when I or one of my
-users needs to read two different kinds of formats, perhaps to align microscopy
-images with PNG or HDF5 images from other instrument or another group, now PIMS
-adds value. If there exist PIMS-compatible objects for all the formats involved,
-my code will have to change very little. I may even decide to install pims
-itself to engage the automatic MIME type inspection and dispatch in
-``pims.open``.
+What have I gained for my effort? If all I care about is my particular file
+format, not much. I'll see no benefit to installing pims itself; I can just
+import and use my PIMS-compatible reader class directly from my package. But
+when I or one of my collaborators needs to read two different kinds of formats,
+perhaps to align microscopy images with images from another instrument or
+another group, now PIMS adds value. If I can find or make PIMS-compatible
+objects for all the formats involved, my code will have to change very little
+moving from one format to another. And to smooth over the differences entirely,
+I may decide to install pims itself to engage the automatic MIME type inspection
+and dispatch in ``pims.open``.
 
 ### More Embellishments to Consider
 
@@ -207,7 +211,7 @@ the sake of a self-contained example.
 3. Install the TIFF reader.
 
    ```sh
-   pip install pims-tiff
+   pip install my_tiff_package
    ```
 
 4. Try using reader directly to read one TIFF.

@@ -258,7 +258,7 @@ the sake of a self-contained example.
    Out[2]: (400, 600, 3)
    ```
 
-   Another example spells the file extension differently (`tiff` vs `tif`, but
+   Another example spells the file extension differently (`tiff` vs `tif`) but
    `mimetypes` still detects the filetype successfully.
 
    ```py

@@ -50,13 +50,17 @@ slowed around 2015, but the project is still tended to.
 
 ## Room for Improvement
 
-* PIMS predated dask. It has not been updated to leverage dask.
-* PIMS predated conda-forge. PIMS has minimal required dependencies (just numpy,
-  six, and a pure-Python support package developed for PIMS)---good so far---but
-  it bundles most of its readers in the main package and has many optional
-  dependencies to support these readers. It might be better to distribute each
-  reader (or groups of readers with the same underlying I/O library) in separate
-  packages so that they can be separately released and installed.
+* PIMS predated [dask](https://dask.pydata.org/). Like PIMS, dask provides an
+  object with numpy-like slicing semantics that can defer I/O and computation.
+  PIMS could be updated to leverage `dask.array`, which has a much larger
+  community behind it.
+* PIMS predated [conda-forge](https://conda-forge.org/). PIMS has minimal
+  required dependencies (just numpy, six, and a pure-Python support package
+  developed for PIMS)---good so far---but it bundles most of its readers in the
+  main package and has many optional dependencies to support these readers. It
+  might be better to distribute each reader (or groups of readers with the same
+  underlying I/O library) in separate packages so that they can be separately
+  released and installed.
 * PIMS predated the acceptance of
   [entrypoints](https://packaging.python.org/specifications/entry-points/)
   as an official PyPA specification (as opposed to a quirk/feature of only
@@ -66,8 +70,8 @@ slowed around 2015, but the project is still tended to.
   (1) external packages with readers *must* import `pims` to subclass its
   objects and (2) the user must import the external package before using
   `pims.open` for PIMS to discover it.
-* PIMS readers return `Frame` objects which subclass `numpy.ndarray` in order to
-  tack a custom `metadata` on the array, rather than taking the xarray
+* PIMS readers return `pims.Frame` objects which subclass `numpy.ndarray` in
+  order to tack a custom `metadata` on the array, rather than taking the xarray
   approach and putting `metadata` on an object that encapsulates the data
   through composition. The authors now appreciate the downsides of subclassing
   `ndarray` and the difficulties of propagating metadata through array
@@ -130,6 +134,8 @@ slowed around 2015, but the project is still tended to.
   reader = pims.open(file)
   reader.metadata
   lazy_array = reader.read()
+  lazy_array.dtype
+  lazy_array.shape
   ```
 
   The usage `pims.open(file).read()` is still satisfyingly succinct and rhymes
@@ -165,24 +171,6 @@ readers for all the formats involved, my code will have to change very little
 moving from one format to another. And to smooth over the differences entirely,
 I may decide to install pims itself to engage the automatic MIME type detection
 and dispatch in ``pims.open``.
-
-### More Embellishments to Consider
-
-* To obtain a `numpy.ndarray` instead of a `dask.array.Array`, users can do
-  `pims.open(file).read().compute()`. Should readers support an optional
-  argument to `read` that returns a `numpy.ndarray` directly, as in
-  `pims.open(file).read(delayed=False)`? Implications:
-  * This reduces the type stability of the API from strict type stability to
-    duck type stability.
-  * Some readers could forgo the dask dependency and raise `NotImplementedError`
-    if `delayed=True`.
-  * Readers could make their own choice about the best default value for
-    `delayed`, depending on data shape and how well the underlying I/O library
-    actually supports laziness.
-* It is often convenient to label axes of the data (color band, x vs y, etc.)
-  Should PIMS 2 standardize on `xarray.DataArray`-wrapping-`dask.array.Array`
-  instead of standardizing on `dask.array.Array`? Or should either be allowed,
-  since they duck-type alike in many ways?
 
 ### Migrating Existing Users
 
@@ -276,3 +264,50 @@ Things to notice:
    `mimetypes`, which relies solely on the file extension. More sophisticated
    detection schemes that consider file signatures are availabe in third party
    libraries and should be considered.
+
+## More Embellishments to Consider
+
+* To obtain a `numpy.ndarray` instead of a `dask.array.Array`, users can do
+  `pims.open(file).read().compute()`. Should readers support an optional
+  argument to `read` that returns a `numpy.ndarray` directly, as in
+  `pims.open(file).read(delayed=False)`? Implications:
+  * This reduces the type stability of the API from strict type stability to
+    duck type stability.
+  * Some readers could forgo the dask dependency and raise `NotImplementedError`
+    if `delayed=True`.
+  * Readers could make their own choice about the best default value for
+    `delayed`, depending on data shape and how well the underlying I/O library
+    actually supports laziness.
+* It is often convenient to label axes of the data (color band, x vs y, etc.)
+  Should PIMS 2 standardize on `xarray.DataArray`-wrapping-`dask.array.Array`
+  instead of standardizing on `dask.array.Array`? Or should either be allowed,
+  since they duck-type alike in many ways?
+
+## Connection to Intake DataSources
+
+The project [intake](https://intake.readthedocs.io/) is a newer project that
+wraps disparate file formats in a consistent interface. Intake handles many data
+structures, not just image time series; in particular it has many readers that
+return tabular data as a `pandas.DataFrame` or `xarray.Dataset`. How should PIMS
+relate to intake?
+
+There is something to be said for intake's all-encompassing generality. "You
+give me a data source; I give you a PyData object or its lazy (dask-backed)
+counterpart." There is also something to be said for the tight scope of "image
+series", which communicates a clear use case to users, lends itself to certain
+file formats, and lends type stability to the interface. That is, PIMS' `read()`
+always returns a time series of frames that the user can loop over; one never
+has to check whether it has returned a `pandas.DataFrame`.
+
+Should PIMS carry on as a similar-but-distinct library to intake or should it
+become a distribution of intake drivers? One possible answer is, "Yes!" If the
+PIMS Reader API satisfies the intake driver API sufficiently, packages could
+declare that objects are both ``'pims.readers'`` and `'intake.drivers'``.
+
+```py
+setup(
+    ...
+    entry_points = {'pims.readers': ['image/tiff = my_package:TIFFReader']}
+                    'intake.drivers': ['SOMETHING = my_package:TIFFReader']}
+)
+```

@@ -142,28 +142,27 @@ slowed around 2015, but the project is still tended to.
   the option for readers to return plain numpy arrays as well or instead. See
   below more more on this point.
 
-### PIMS as a Pattern
+### Use Case
 
-In the proposed design for 2.0, the "core" PIMS library becomes quite small
-indeed, and some applications unnecessary to even install.
-
-Suppose I have a library for reading and analyzing microscopy images in
+Suppose I have a library for reading and analyzing microscopy images in a
 particular file format. I already have I/O code. I could wrap it in a class that
-implements a PIMS-compatible reader. (As illusrated with `reader` above in the
-example below, a "PIMS compatible reader" is a very small API, so this is likely
-< 100 lines of code.) I could make the reader discoverable by declaring a
-``'pims.readers'`` entrypoint in my ``setup.py``. As emphasized above, I could
-do both of these things without importing pims.
+implements a PIMS-compatible reader. (As illusrated with `reader` above and in
+the example below, a "PIMS compatible reader" is a very small API, so this is
+likely < 100 lines of code.) I could make the reader "discoverable" to PIMS by
+declaring a ``'pims.readers'`` entrypoint in my ``setup.py``. As emphasized
+above, I could do both of these things without importing pims or adding it as a
+dependency.
 
 What have I gained for my effort? If all I care about is my particular file
 format, not much. I'll see no benefit to installing pims itself; I can just
-import and use my PIMS-compatible reader class directly from my package. But
-when I or one of my collaborators needs to read two different kinds of formats,
-perhaps to align microscopy images with images from another instrument or
-another group, now PIMS adds value. If I can find or make PIMS-compatible
-objects for all the formats involved, my code will have to change very little
+import and use my PIMS-compatible reader class directly from my package.
+
+But when I or one of my collaborators needs to read two different kinds of
+formats, perhaps to align microscopy images with images from another instrument
+or another group, now PIMS adds value. If I can find or make PIMS-compatible
+readers for all the formats involved, my code will have to change very little
 moving from one format to another. And to smooth over the differences entirely,
-I may decide to install pims itself to engage the automatic MIME type inspection
+I may decide to install pims itself to engage the automatic MIME type detection
 and dispatch in ``pims.open``.
 
 ### More Embellishments to Consider

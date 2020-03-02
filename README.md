@@ -300,7 +300,7 @@ Things to notice:
 
 [Intake](https://intake.readthedocs.io/) is a newer project that, like PIMS,
 wraps disparate file formats in a consistent interface. Unlike PIMS, intake
-handles many data structures, not just image time series; in particular it has
+handles many data structures, not just image series; in particular it has
 many readers that return tabular data as a `pandas.DataFrame` or
 `xarray.Dataset`. How should PIMS relate to intake?
 
@@ -309,7 +309,7 @@ give me a data source; I give you a PyData object or its lazy (dask-backed)
 counterpart." There is also something to be said for the tight scope of "image
 series", which communicates a clear use case to users, lends itself to certain
 file formats, and lends type stability to the interface. That is, PIMS' `read()`
-always returns a time series of frames that the user can loop over; one never
+always returns a series of image frames that the user can loop over; one never
 has to check whether it has returned a `pandas.DataFrame`.
 
 Should PIMS carry on as a similar-but-distinct library to intake or should it

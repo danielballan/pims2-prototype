@@ -22,11 +22,14 @@ class TIFFReader:
             # file is a file buffer
             self._tiff_files = [tifffile.TiffFile(file)]
         self._file = file  # used in __repr__
+        self._closed = False
 
     def __repr__(self):
         return f"TiffReader({self._file!r})"
 
     def read(self):
+        if self._closed:
+            raise Closed(f"{self} is closed and can no longer be read.")
         stack = []
         for tf in self._tiff_files:
             assert len(tf.series) == 1  # should be True by construction
@@ -41,3 +44,18 @@ class TIFFReader:
             return stack[0]
         else:
             return dask.array.stack(stack)
+
+    def close(self):
+        self._closed = True
+        for tf in self._tiff_files:
+            tf.close()
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *exc_details):
+        self.close()
+
+
+class Closed(Exception):
+    ...

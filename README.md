@@ -163,10 +163,10 @@ still tended to.
   instead of returning an iterable of lines, it will return a lazy array-like
   object, which can be treated as an iterable sequence of images.
 
-* **Use Dask** Embrace dask arrays, leaving behind PIMS' lazy array-like
-  classes `FramesSequence` and `FramesSequenceND`. We may also want to provide
-  the option for readers to return plain numpy arrays as well or instead. See
-  below more more on this point.
+* **Use Dask** Embrace dask arrays, integrating with or replacing PIMS' lazy
+  array-like classes `FramesSequence` and `FramesSequenceND`. It is an open
+  question whether dask arrays can fully support the same lazy slicing
+  semantics; see [#1](https://github.com/danielballan/pims2-prototype/issues/1).
 
 ### Use Case
 

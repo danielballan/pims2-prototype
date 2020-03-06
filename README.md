@@ -71,6 +71,11 @@ still tended to.
   (1) external packages with readers *must* import `pims` to subclass its
   objects and (2) the user must import the external package before using
   `pims.open` for PIMS to discover it.
+* PIMS predated [xarray](https://xarray.pydata.org/en/stable/). The
+  `xarray.DataArray` object could provide a natural way of encoding frame
+  number, timecodes, "band" (i.e. color channel) labels. (For those unfamiliar,
+  it's analogous to a `pandas.Series`, but with full ND support. It also plays
+  very well with dask.)
 * PIMS readers return `pims.Frame` objects which subclass `numpy.ndarray` in
   order to tack a custom `metadata` on the array, rather than taking the xarray
   approach and putting `metadata` on an object that encapsulates the data
@@ -279,23 +284,15 @@ Things to notice:
    detection schemes that consider file signatures are availabe in third party
    libraries and should be considered.
 
-## More Embellishments to Consider
+## Variety of Return Types
 
-* To obtain a `numpy.ndarray` instead of a `dask.array.Array`, users can do
-  `pims.open(file).read().compute()`. Should readers support an optional
-  argument to `read` that returns a `numpy.ndarray` directly, as in
-  `pims.open(file).read(delayed=False)`? Implications:
-  * This reduces the type stability of the API from strict type stability to
-    duck type stability.
-  * Some readers could forgo the dask dependency and raise `NotImplementedError`
-    if `delayed=True`.
-  * Readers could make their own choice about the best default value for
-    `delayed`, depending on data shape and how well the underlying I/O library
-    actually supports laziness.
-* It is often convenient to label axes of the data (color band, x vs y, etc.)
-  Should PIMS 2 standardize on `xarray.DataArray`-wrapping-`dask.array.Array`
-  instead of standardizing on `dask.array.Array`? Or should either be allowed,
-  since they duck-type alike in many ways?
+It is often useful to label axes of the data (color band, x vs y, etc.) and it
+may be useful to add *coordinates* like frame number and time code. Should
+PIMS 2 standardize on `xarray.DataArray`-wrapping-`dask.array.Array` instead
+of standardizing on `dask.array.Array`? Or should we explicitly support the
+possibility of multiple variations on a given reader (via thin subclasses)
+that implement different return types, potentially including
+`xarray.DataArray`, `dask.array.Array`, and plain `numpy.ndarray`?
 
 ## Connection to Intake DataSources
 

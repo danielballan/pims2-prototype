@@ -6,6 +6,8 @@ class TIFFReader:
     """
     Accepts file, filepath, or filepath glob.
     """
+    container = 'dask.array.core.Array'
+
     def __init__(self, file):
         if isinstance(file, str):
             # file is a filepath or filepath glob

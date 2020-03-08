@@ -36,7 +36,7 @@ def _dispatch(file):
         raise DispatchError(f"Could not detect MIME type of {file}")
     try:
         entrypoint = entrypoints.get_single('pims.readers', mimetype)
-    except entrypoints.NoSuchEntrypoint:
+    except entrypoints.NoSuchEntryPoint:
         raise DispatchError(f"No PIMS reader found for MIME type {mimetype}")
     reader = entrypoint.load()
     return reader

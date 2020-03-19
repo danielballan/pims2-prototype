@@ -119,7 +119,7 @@ still tended to.
   ```py
   setup(
       ...
-      entry_points = {'pims.readers': ['image/tiff = my_package:TIFFReader']}
+      entry_points = {'TBD.readers': ['image/tiff = my_package:TIFFReader']}
   )
   ```
 
@@ -175,7 +175,7 @@ particular file format. I already have I/O code. I could wrap it in a class that
 implements a PIMS-compatible reader. (As illusrated with `reader` above and in
 the example below, a "PIMS compatible reader" is a very small API, so this is
 likely < 100 lines of code.) I could make the reader "discoverable" to PIMS by
-declaring a ``'pims.readers'`` entrypoint in my ``setup.py``. As emphasized
+declaring a ``'TBD.readers'`` entrypoint in my ``setup.py``. As emphasized
 above, I could do both of these things without importing pims or adding it as a
 dependency.
 
@@ -199,36 +199,27 @@ deprecated but usable, alongside new objects that implement the PIMS 2 API.
 
 ## Try the Prototype
 
-This repo contains several packages, which should be maintained in separate
-repositories. They are prototyped in subdirectories of this repository only for
-the sake of a self-contained example.
-
-1. Install the requirements. Note that PIMS 2 itself has only one requirement,
-   the small pure-Python library `entrypoints`. These are the requirements for
-   generating example data.
+1. Install an example TIFF reader.
 
    ```sh
-   pip install -r requirements_for_generate_example_data.txt
+   git clone https://github.com/danielballan/tifffile_reader
+   cd tifffile_reader
+   pip install -e .
    ```
 
 2. Generate example data.
 
    ```sh
+   pip install -r requirements_for_generate_example_data.txt
    python generate_example_data.py
    ```
 
-3. Install the TIFF reader.
-
-   ```sh
-   pip install -e my_tiff_package
-   ```
-
-4. Try using reader directly to read one TIFF.
+3. Try using reader directly to read one TIFF.
 
    ```py
-   In [1]: import my_tiff_package
+   In [1]: import tifffile_reader
 
-   In [2]: reader = my_tiff_package.TIFFReader('example_data/coffee.tif')
+   In [2]: reader = tifffile_reader.TIFFReader('example_data/coffee.tif')
 
    In [3]: reader
    Out[3]: TiffReader('example_data/coffee.tif')
@@ -243,17 +234,19 @@ the sake of a self-contained example.
    And try a TIFF series and stack as well.
 
    ```py
-   In [3]: my_tiff_package.TIFFReader('example_data/series/*.tif').read().shape
+   In [3]: tifffile_reader.TIFFReader('example_data/series/*.tif').read().shape
    Out[3]: (200, 25, 25)
 
-   In [4]: my_tiff_package.TIFFReader('example_data/lfw_subset_as_stack.tif').read().shape
+   In [4]: tifffile_reader.TIFFReader('example_data/lfw_subset_as_stack.tif').read().shape
    Out[4]: (200, 25, 25)
    ```
 
 5. Install PIMS.
 
    ```sh
-   pip install -e pims  # must use -e to pull from current directory not PyPI
+   git clone https://github.com/danielballan/pims2-prototype
+   cd pims2-prototype
+   pip install -e .
    ```
 
 6. Let `pims.open` detect the filetype and invoke the TIFF reader implicitly.
@@ -274,7 +267,7 @@ the sake of a self-contained example.
    ```
 
 Things to notice:
-*  We were able to use `my_tiff_package` without `pims` imported or even
+*  We were able to use `tifffile_reader` without `pims` imported or even
    installed. If `tifffile` itself were to add a PIMS reader, it could do so
    without adding a `pims` dependency.
 *  The core `pims` package provides the dispatch-on-filetype mechanism. It has
@@ -311,14 +304,7 @@ always returns a series of image frames that the user can loop over; one never
 has to check whether it has returned a `pandas.DataFrame`.
 
 Should PIMS carry on as a similar-but-distinct library to intake or should it
-become a distribution of intake drivers? One possible answer is, "Yes!" If the
-PIMS Reader API satisfies the intake driver API sufficiently, packages could
-declare that objects are both ``'pims.readers'`` and `'intake.drivers'``.
-
-```py
-setup(
-    ...
-    entry_points = {'pims.readers': ['image/tiff = my_package:TIFFReader']}
-                    'intake.drivers': ['SOMETHING = my_package:TIFFReader']}
-)
-```
+become a distribution of intake drivers? One possible answer is, "Yes!" It is
+to automatically generate objects that satify the intake ``DataSource`` API from
+the proposed ``Reader`` objects. This is demonstrated in
+[danielballan/reader-intake-adapter](https://github.com/danielballan/reader-intake-adapter).

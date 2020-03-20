@@ -203,15 +203,14 @@ deprecated but usable, alongside new objects that implement the PIMS 2 API.
 
    ```sh
    git clone https://github.com/danielballan/tifffile_reader
-   cd tifffile_reader
-   pip install -e .
+   pip install -e tifffile_reader/
    ```
 
 2. Generate example data.
 
    ```sh
-   pip install -r requirements_for_generate_example_data.txt
-   python generate_example_data.py
+   pip install -r tifffile_reader/requirements_for_generate_example_data.txt
+   python tifffile_reader/generate_example_data.py
    ```
 
 3. Try using reader directly to read one TIFF.
@@ -219,10 +218,10 @@ deprecated but usable, alongside new objects that implement the PIMS 2 API.
    ```py
    In [1]: import tifffile_reader
 
-   In [2]: reader = tifffile_reader.TIFFReader('example_data/coffee.tif')
+   In [2]: reader = tifffile_reader.TIFFReader('tifffile_reader/example_data/coffee.tif')
 
    In [3]: reader
-   Out[3]: TiffReader('example_data/coffee.tif')
+   Out[3]: TiffReader('tifffile_reader/example_data/coffee.tif')
 
    In [4]: reader.read()
    Out[4]: dask.array<from-value, shape=(400, 600, 3), dtype=uint8, chunksize=(400, 600, 3), chunktype=numpy.ndarray>
@@ -234,10 +233,10 @@ deprecated but usable, alongside new objects that implement the PIMS 2 API.
    And try a TIFF series and stack as well.
 
    ```py
-   In [3]: tifffile_reader.TIFFReader('example_data/series/*.tif').read().shape
+   In [3]: tifffile_reader.TIFFReader('tifffile_reader/example_data/series/*.tif').read().shape
    Out[3]: (200, 25, 25)
 
-   In [4]: tifffile_reader.TIFFReader('example_data/lfw_subset_as_stack.tif').read().shape
+   In [4]: tifffile_reader.TIFFReader('tifffile_reader/example_data/lfw_subset_as_stack.tif').read().shape
    Out[4]: (200, 25, 25)
    ```
 
@@ -245,8 +244,7 @@ deprecated but usable, alongside new objects that implement the PIMS 2 API.
 
    ```sh
    git clone https://github.com/danielballan/pims2-prototype
-   cd pims2-prototype
-   pip install -e .
+   pip install -e pims2-prototype/
    ```
 
 6. Let `pims.open` detect the filetype and invoke the TIFF reader implicitly.
@@ -254,7 +252,7 @@ deprecated but usable, alongside new objects that implement the PIMS 2 API.
    ```py
    In [1]: import pims
 
-   In [2]: pims.open('example_data/coffee.tif').read().shape
+   In [2]: pims.open('tifffile_reader/example_data/coffee.tif').read().shape
    Out[2]: (400, 600, 3)
    ```
 
@@ -262,7 +260,7 @@ deprecated but usable, alongside new objects that implement the PIMS 2 API.
    `mimetypes` still detects the filetype successfully.
 
    ```py
-   In [3]: pims.open('example_data/coffee.tiff').read().shape
+   In [3]: pims.open('tifffile_reader/example_data/coffee.tiff').read().shape
    Out[3]: (400, 600, 3)
    ```
 
